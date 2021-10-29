@@ -1,37 +1,90 @@
 const tool = ['rock','paper','scissors'];
 
+
+const container = document.querySelector('.buttons');
+const playerScoreContainer = document.querySelector('#playerScore');
+const computerScoreContainer = document.querySelector('#computerScore');
+const result = document.querySelector('.result');
+
+
+const div = document.createElement('div');
+const spanPlayer = document.createElement('span');
+const spanComputer = document.createElement('span');
+
+const btns = Array.from(document.querySelectorAll('.btn'));
+
+let playerScore = 0;
+let computerScore = 0;
+
 const computerPlay = () => {    
     let random = Math.floor(Math.random() * 3);
     return tool[random];
 };
 
-// console.log(computerPlay());
-
 const playRound = (playerSelection, computerSelection) => {
+
    
     let playerChoice = playerSelection.toLowerCase();
     console.log('player: ' + playerSelection, 'computer: ' + computerSelection);
 
     if(playerChoice === 'paper' && computerSelection === 'rock' || playerChoice === 'rock' && computerSelection === 'scissors' || 
     playerChoice === 'scissors' && computerSelection === 'paper'){
-            console.log('player won');
+            div.innerHTML = 'player won';
+           spanPlayer.textContent = ++playerScore;
     } else if (playerChoice === 'rock' && computerSelection === 'rock' || playerChoice === 'paper' && computerSelection === 'paper' || playerChoice === 'scissors' && computerSelection === 'scissors'){
-        console.log('equal');
+        div.innerHTML = 'equal';
+        spanPlayer.textContent = ++playerScore;
+        spanComputer.textContent = ++computerScore;
     } else {
-        console.log('computer worn');
+        div.innerHTML = 'computer won';
+        spanComputer.textContent = ++computerScore;
     }
-};
-
-const game = () => {
    
-    
-    for(let i=0; i<5; i++) {
-        let player = prompt('pick one: rock, scissors, paper: ');
-        let computer = computerPlay();
-        
-        playRound(player, computer);
-    }
+   // container.appendChild(div);
+    playerScoreContainer.appendChild(spanPlayer);
+    computerScoreContainer.appendChild(spanComputer);
 
 };
 
-game();
+const showResult = () => {
+    if(playerScore == 5) {
+        result.textContent = 'player win';
+        resetGame();
+    } else if(computerScore == 5) {
+        result.textContent = 'computer win';
+        resetGame();
+    }
+}
+
+const resetGame = () => {
+    btns.forEach(btn => {
+      btn.setAttribute('disabled', true);  
+    });
+    setTimeout(() => {
+    window.location.reload();
+    },2000);
+}
+
+btns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        let computer = computerPlay();
+        playRound(btn.id, computer);
+
+        if(playerScore == 5 || computerScore == 5) {
+            showResult();
+        }
+
+    });
+});
+
+
+
+
+
+
+
+
+
+
+//game();
